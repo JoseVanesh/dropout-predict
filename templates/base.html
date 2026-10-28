@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Dropout Predict{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ url_for('index') }}">
+        <span class="brand-mark">DP</span>
+        <span class="brand-text">
+          <strong>Dropout Predict</strong>
+          <small>Student Success Classifier</small>
+        </span>
+      </a>
+      <nav class="nav">
+        <a class="{% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">Prediksi</a>
+        <a class="{% if request.endpoint == 'model_page' %}active{% endif %}" href="{{ url_for('model_page') }}">Performa Model</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <span>Dropout Predict &middot; XGBoost multiclass classifier</span>
+      <span>Dataset: UCI Students' Dropout and Academic Success</span>
+    </div>
+  </footer>
+</body>
+</html>

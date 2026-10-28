@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Terjadi Kesalahan &middot; Dropout Predict{% endblock %}
+
+{% block content %}
+<section class="card error-card">
+  <h1>Ada yang perlu disiapkan</h1>
+  <p>{{ message }}</p>
+  <a class="button primary" href="{{ url_for('index') }}">Kembali ke halaman prediksi</a>
+</section>
+{% endblock %}

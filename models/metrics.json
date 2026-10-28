@@ -1,0 +1,131 @@
+{
+  "dataset": {
+    "rows": 4424,
+    "features_raw": 36,
+    "features_total": 256,
+    "target_counts": {
+      "Graduate": 2209,
+      "Dropout": 1421,
+      "Enrolled": 794
+    }
+  },
+  "cv_comparison": {
+    "Logistic Regression": {
+      "mean_macro_f1": 0.709952926537852,
+      "std_macro_f1": 0.014787426753419408
+    },
+    "Random Forest": {
+      "mean_macro_f1": 0.6935040520760212,
+      "std_macro_f1": 0.02133682921450769
+    },
+    "HistGradientBoosting": {
+      "mean_macro_f1": 0.7140165354215722,
+      "std_macro_f1": 0.014290577153147625
+    },
+    "XGBoost": {
+      "mean_macro_f1": 0.7263630337673133,
+      "std_macro_f1": 0.009682391869245587
+    },
+    "SVM (RBF)": {
+      "mean_macro_f1": 0.7211503255231164,
+      "std_macro_f1": 0.013494343585264903
+    }
+  },
+  "best_model": "XGBoost",
+  "best_params": {
+    "model__subsample": "1.0",
+    "model__n_estimators": "300",
+    "model__min_child_weight": "3",
+    "model__max_depth": "3",
+    "model__learning_rate": "0.1",
+    "model__colsample_bytree": "0.8"
+  },
+  "best_cv_macro_f1": 0.7202599683550946,
+  "test_metrics": {
+    "accuracy": 0.7570621468926554,
+    "macro_f1": 0.68190573861357,
+    "weighted_f1": 0.7482712338791496,
+    "confusion_matrix": [
+      [
+        208,
+        39,
+        37
+      ],
+      [
+        44,
+        62,
+        53
+      ],
+      [
+        17,
+        25,
+        400
+      ]
+    ],
+    "labels": [
+      "Dropout",
+      "Enrolled",
+      "Graduate"
+    ],
+    "per_class_recall": {
+      "Dropout": 0.7323943661971831,
+      "Enrolled": 0.389937106918239,
+      "Graduate": 0.9049773755656109
+    },
+    "per_class_f1": {
+      "Dropout": 0.7522603978300181,
+      "Enrolled": 0.43508771929824563,
+      "Graduate": 0.8583690987124464
+    }
+  },
+  "top_features": [
+    {
+      "feature": "Curricular units 2nd sem (approved)",
+      "importance": 0.18783793629111764
+    },
+    {
+      "feature": "Curricular units 1st sem (approved)",
+      "importance": 0.09391090956756358
+    },
+    {
+      "feature": "Tuition fees up to date",
+      "importance": 0.03736629381174757
+    },
+    {
+      "feature": "Curricular units 2nd sem (enrolled)",
+      "importance": 0.024861446402446096
+    },
+    {
+      "feature": "Mother's occupation",
+      "importance": 0.013794954582411801
+    },
+    {
+      "feature": "Curricular units 2nd sem (evaluations)",
+      "importance": 0.013517775051971515
+    },
+    {
+      "feature": "Curricular units 1st sem (enrolled)",
+      "importance": 0.011986110317024212
+    },
+    {
+      "feature": "Curricular units 1st sem (evaluations)",
+      "importance": 0.00996537802512909
+    },
+    {
+      "feature": "Age at enrollment",
+      "importance": 0.009664145695774473
+    },
+    {
+      "feature": "GDP",
+      "importance": 0.0042266175115357905
+    },
+    {
+      "feature": "Gender",
+      "importance": 0.004180666817367551
+    },
+    {
+      "feature": "Curricular units 1st sem (grade)",
+      "importance": 0.0036474201614817847
+    }
+  ]
+}

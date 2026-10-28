@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+{% block title %}Performa Model &middot; Dropout Predict{% endblock %}
+
+{% block content %}
+<section class="hero compact">
+  <div class="hero-copy">
+    <span class="eyebrow">Model Evaluation</span>
+    <h1>Performa {{ metrics.best_model }}</h1>
+    <p>
+      Model terpilih berdasarkan rata-rata <strong>macro-F1</strong> pada validasi
+      silang, lalu diuji pada 20% data yang tidak dipakai saat training.
+    </p>
+  </div>
+</section>
+
+<div class="metric-grid">
+  <div class="card metric-card">
+    <span class="metric-label">Accuracy</span>
+    <span class="metric-value">{{ "%.3f"|format(metrics.test_metrics.accuracy) }}</span>
+  </div>
+  <div class="card metric-card">
+    <span class="metric-label">Macro-F1</span>
+    <span class="metric-value">{{ "%.3f"|format(metrics.test_metrics.macro_f1) }}</span>
+  </div>
+  <div class="card metric-card">
+    <span class="metric-label">Weighted-F1</span>
+    <span class="metric-value">{{ "%.3f"|format(metrics.test_metrics.weighted_f1) }}</span>
+  </div>
+  <div class="card metric-card">
+    <span class="metric-label">CV Macro-F1</span>
+    <span class="metric-value">{{ "%.3f"|format(metrics.best_cv_macro_f1) }}</span>
+  </div>
+</div>
+
+<section class="card">
+  <h2>Perbandingan model (5-fold CV)</h2>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Model</th><th>Macro-F1</th><th>Std. dev</th></tr>
+      </thead>
+      <tbody>
+        {% for name, score in metrics.cv_comparison.items() %}
+        <tr class="{% if name == metrics.best_model %}best-row{% endif %}">
+          <td>{{ name }}{% if name == metrics.best_model %} <span class="tag">terbaik</span>{% endif %}</td>
+          <td>{{ "%.4f"|format(score.mean_macro_f1) }}</td>
+          <td>{{ "%.4f"|format(score.std_macro_f1) }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="result-grid">
+  <section class="card">
+    <h2>Metrik per kelas</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Kelas</th><th>Recall</th><th>F1</th></tr></thead>
+        <tbody>
+          {% for label in target_order %}
+          <tr>
+            <td>{{ label }}</td>
+            <td>{{ "%.3f"|format(metrics.test_metrics.per_class_recall[label]) }}</td>
+            <td>{{ "%.3f"|format(metrics.test_metrics.per_class_f1[label]) }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Confusion matrix (test set)</h2>
+    <div class="table-wrap">
+      <table class="confusion">
+        <thead>
+          <tr>
+            <th></th>
+            {% for label in target_order %}<th>{{ label }}</th>{% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in metrics.test_metrics.confusion_matrix %}
+          <tr>
+            <th>{{ target_order[loop.index0] }}</th>
+            {% for value in row %}<td>{{ value }}</td>{% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">Baris = label aktual, kolom = prediksi model.</p>
+  </section>
+</div>
+
+<section class="card">
+  <h2>Fitur paling penting</h2>
+  <p class="hint">Permutation importance pada test set (penurunan macro-F1 saat fitur diacak).</p>
+  <div class="feature-bars">
+    {% set max_importance = metrics.top_features[0].importance if metrics.top_features else 1 %}
+    {% for item in metrics.top_features %}
+    <div class="feature-row">
+      <span class="feature-name">{{ item.feature }}</span>
+      <div class="bar-track">
+        <div class="bar-fill importance" style="width: {{ (item.importance / max_importance * 100)|round(1) }}%"></div>
+      </div>
+      <span class="feature-score">{{ "%.4f"|format(item.importance) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="card">
+  <h2>Info dataset</h2>
+  <div class="details-grid">
+    <div class="detail-row">
+      <span class="detail-label">Jumlah baris</span>
+      <span class="detail-value">{{ metrics.dataset.rows }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Fitur mentah</span>
+      <span class="detail-value">{{ metrics.dataset.features_raw }}</span>
+    </div>
+    <div class="detail-row">
+      <span class="detail-label">Fitur setelah preprocessing</span>
+      <span class="detail-value">{{ metrics.dataset.features_total }}</span>
+    </div>
+    {% for label, count in metrics.dataset.target_counts.items() %}
+    <div class="detail-row">
+      <span class="detail-label">Kelas {{ label }}</span>
+      <span class="detail-value">{{ count }}</span>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}
